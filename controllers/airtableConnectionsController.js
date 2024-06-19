@@ -13,6 +13,7 @@ exports.addOrUpdateConnectionToAirtable = async (connection) => {
       await base(process.env.AIRTABLE_CONNECTIONS_TABLE).update(records[0].id, {
         "Page Name": connection.page_name,
         "Platform": connection.platform,
+        "Connection ID": connection.id
       });
     } else {
       // Create new record

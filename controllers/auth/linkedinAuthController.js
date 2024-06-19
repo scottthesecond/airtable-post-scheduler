@@ -60,28 +60,48 @@ exports.linkedinCallback = async (req, res) => {
 async function fetchOrganizations(accessToken, login_id, res) {
   try {
     const orgResponse = await axios.get('https://api.linkedin.com/v2/organizationAcls?q=roleAssignee', {
-      headers: { 
-        Authorization: `Bearer ${accessToken}`//,
-       // 'Linkedin-Version': '202404'
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Linkedin-Version': '202404'
       },
     });
 
-    const organizations = orgResponse.data.elements.map(org => ({
-      id: org.id,
-      name: org.localizedName,
-      platform: 'LinkedIn',
-      access_token: accessToken,
+    console.log('Organizations response:', orgResponse.data);
+
+    // Extract organization IDs from URNs
+    const organizationIds = orgResponse.data.elements.map(org => org.organization.split(':').pop());
+
+    // Fetch organization details
+    const organizations = await Promise.all(organizationIds.map(async (id) => {
+      const orgDetailsResponse = await axios.get(`https://api.linkedin.com/rest/organizations/${id}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Linkedin-Version': '202404'
+        }
+      });
+
+      const organization = orgDetailsResponse.data;
+      return {
+        id: organization.id,
+        name: organization.localizedName,
+        platform: 'LinkedIn',
+        access_token: accessToken,
+      };
     }));
+
+    console.log('Fetched organizations:', organizations);
 
     handleConnections(login_id, organizations, res);
   } catch (error) {
     console.error('Error fetching organizations:', error.response ? error.response.data : error.message);
     res.status(500).send('Error fetching organizations');
   }
-}
-
+}  
+  
 function handleConnections(login_id, organizations, res) {
   organizations.forEach(org => {
+    console.log('Handling organization:', org);
+
     connectionModel.findConnection(login_id, org.id, org.platform, (err, connection) => {
       if (err) {
         console.error('Error finding connection:', err.message);
@@ -99,6 +119,7 @@ function handleConnections(login_id, organizations, res) {
 
       if (connection) {
         // Update existing connection
+        console.log('Updating existing connection:', connectionData);
         connectionModel.updateConnection(login_id, org.id, org.name, org.platform, org.access_token, (err) => {
           if (err) {
             console.error('Error updating connection:', err.message);
@@ -114,6 +135,7 @@ function handleConnections(login_id, organizations, res) {
         });
       } else {
         // Insert new connection
+        console.log('Inserting new connection:', connectionData);
         connectionModel.insertConnection(login_id, org.id, org.name, org.platform, org.access_token, (err, connection_id) => {
           if (err) {
             console.error('Error storing connection:', err.message);
