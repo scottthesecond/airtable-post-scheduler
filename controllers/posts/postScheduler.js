@@ -4,6 +4,7 @@ const db = require('../../config/database');
 const airtablePostsController = require('../airtablePostsController');
 const facebookController = require('./facebookController');
 const instagramController = require('./instagramController');
+const linkedinController = require('./linkedinController');
 
 Airtable.configure({ apiKey: process.env.AIRTABLE_API_KEY });
 const base = Airtable.base(process.env.AIRTABLE_BASE_ID);
@@ -15,6 +16,8 @@ const postToPlatform = async (connection, post, postId) => {
       postLink = await facebookController.post(post, connection.access_token);
     } else if (connection.platform.toLowerCase() === 'instagram') {
       postLink = await instagramController.post(post, connection.access_token);
+    } else if (connection.platform.toLowerCase() === 'linkedin') {
+      postLink = await linkedinController.post(post, connection.access_token);
     }
     // Add other platforms here
 
