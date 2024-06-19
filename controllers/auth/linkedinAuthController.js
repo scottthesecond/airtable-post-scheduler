@@ -141,7 +141,13 @@ function handleConnections(login_id, organizations, res) {
             console.error('Error storing connection:', err.message);
             return res.status(500).send('Internal Server Error');
           }
-          connectionData.id = connection_id;
+
+          console.log("New COnnection ID", connection_id);
+          
+          connectionData.id = connection_id; // Update the connectionData with the new connection_id
+
+          console.log('Inserting Data to Airtable:', connectionData);
+
           airtableConnectionsController.addOrUpdateConnectionToAirtable(connectionData)
             .then(() => {
               console.log('Connection added to Airtable');
