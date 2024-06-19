@@ -1,3 +1,6 @@
+.env
+auth.db
+
 # Logs
 logs
 *.log
