@@ -1,5 +1,6 @@
 .env
 auth.db
+cache/
 
 # Logs
 logs

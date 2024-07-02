@@ -11,4 +11,5 @@ Use airtable as your social media scheduler.
 - [X] Meta Posting
    -  [ ] Still need to test this...
 - [X] Linkedin Login
-- [ ] Linkedin Posting
+- [X] Linkedin Posting
+   -  [ ] Still need to test this...

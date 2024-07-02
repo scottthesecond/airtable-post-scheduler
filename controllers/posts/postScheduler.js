@@ -17,7 +17,7 @@ const postToPlatform = async (connection, post, postId) => {
     } else if (connection.platform.toLowerCase() === 'instagram') {
       postLink = await instagramController.post(post, connection.access_token);
     } else if (connection.platform.toLowerCase() === 'linkedin') {
-      postLink = await linkedinController.post(post, connection.access_token);
+      postLink = await linkedinController.post(post, connection.access_token, connection);
     }
     // Add other platforms here
 

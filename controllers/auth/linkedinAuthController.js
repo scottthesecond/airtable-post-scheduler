@@ -10,9 +10,9 @@ exports.authLinkedIn = (req, res) => {
     response_type: 'code',
     client_id: process.env.LINKEDIN_CLIENT_ID,
     redirect_uri: `${process.env.REDIRECT_URI}/linkedin`,
-    scope: 'r_organization_social,w_organization_social,w_member_social,r_basicprofile,rw_organization_admin',
+    scope: 'r_organization_social w_organization_social w_member_social r_basicprofile rw_organization_admin',
   });
-
+  
   res.redirect(`${authUrl}?${queryParams}`);
 };
 
