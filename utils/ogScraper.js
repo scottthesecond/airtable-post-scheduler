@@ -11,10 +11,10 @@ exports.getOgData = async (link) => {
       const ogDescription = result.ogDescription || '';
       const ogImage = result.ogImage ? result.ogImage[0].url : '';
 
-      await imageCache.downloadImage(ogImage);
+      const imagePath = await imageCache.downloadImage(ogImage);
 
-      const image = fs.readFileSync(imagePath);
+      //const image = fs.readFileSync(imagePath);
 
-      return { ogTitle, ogDescription, ogImage, imagePath, image}
+      return { ogTitle, ogDescription, ogImage, imagePath}
 
 };

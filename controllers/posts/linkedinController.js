@@ -5,8 +5,18 @@ const path = require('path');
 const ogScraper = require('../../utils/ogScraper');
 const imageCache = require('../../utils/imageCache');
 
-uploadImage = async(accessToken, connection, imageFs) => {
+
+/**
+ * Uploads an image to LinkedIn to be used in a post.
+ * @param {string} accessToken Linkedin access token.
+ * @param {object} connection Object with LinkedIn connection data – eventually accessToken will be moved in here.
+ * @param {string} imagePath Path to the image to upload.
+ * @returns { imageUrn }
+ */
+
+uploadImage = async(accessToken, connection, imagePath) => {
   
+  // Initilizes the upload request with Linkedin, and get the URL to post the image to.
   const uploadRequest = await axios.post(`https://api.linkedin.com/rest/images?action=initializeUpload`, {
     initializeUploadRequest: {
       "owner": `urn:li:organization:${connection['page_id']}` 
@@ -21,8 +31,10 @@ uploadImage = async(accessToken, connection, imageFs) => {
 
   console.log('Upload Request Response:', uploadRequest.data);
 
-  const uploadUrl = uploadRequest.data.value.uploadUrl;
+  const imageFs = fs.readFileSync(imagePath);
 
+  // Upload the image to the URL provided
+  const uploadUrl = uploadRequest.data.value.uploadUrl;
   const imageUploadResponse = await axios.put(uploadUrl, imageFs, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -32,17 +44,14 @@ uploadImage = async(accessToken, connection, imageFs) => {
     }
   });
 
-  console.log('Image Upload Response:', imageUploadResponse.status, imageUploadResponse.statusText, uploadResponse.data);
+  console.log('Image Upload Response:', imageUploadResponse.status, imageUploadResponse.statusText, uploadRequest.data);
 
-  const imageUrn = uploadResponse.data.value.image;
-
+  const imageUrn = uploadRequest.data.value.image;
   return { imageUrn };
 
 }
 
 exports.post = async (post, accessToken, connection) => {
-
-  // console.log("LinkedIn Post!", post, "Connection Data", connection);
 
   const postTypeArray = post['Type'];
   const postType = Array.isArray(postTypeArray) ? postTypeArray[0] : postTypeArray; // Ensure postType is a string
@@ -53,12 +62,15 @@ exports.post = async (post, accessToken, connection) => {
     let response;
 
     if (postType === 'Link') {
+
+      console.log("Posting an article", post);
+
       const linkArray = post.URL;
       const link = Array.isArray(linkArray) ? linkArray[0] : linkArray; // Ensure link is a string
 
-     const { ogTitle, ogDescription, image} = await ogScraper.getOgData(link);
+     const { ogTitle, ogDescription, imagePath} = await ogScraper.getOgData(link);
 
-     const { imageUrn } = await uploadImage(accessToken, connection, image);
+     const { imageUrn } = await uploadImage(accessToken, connection, imagePath);
 
       const payload = {
         author: `urn:li:organization:${connection['page_id']}`,
@@ -98,27 +110,19 @@ exports.post = async (post, accessToken, connection) => {
       postUrl = `https://www.linkedin.com/feed/update/${postId}`;
 
     } else if (postType === 'Image') {
-      const imageArray = post.Image;
-      const imageUrl = Array.isArray(imageArray) ? imageArray[0].url : imageArray.url; // Ensure imageUrl is a string
 
-      const image = imageCache.downloadImage(imageUrl);
-
-      const { imageUrn } = await uploadImage(accessToken, connection, image);
+      console.log("Posting an Image", post);
 
 
-      /*
-      // Extract the image extension
-      const ext = path.extname(new URL(imageUrl).pathname);
-      const imageName = `image${Date.now()}${ext}`;
-      const imagePath = path.resolve(__dirname, imageName);
+      const airtableImage = Array.isArray(post.Image) ? post.Image[0] : post.Image; 
 
-      // Download the image locally
-      await downloadImage(imageUrl, imagePath);
+      console.log(airtableImage);
 
-      const image = fs.readFileSync(imagePath);
-*/ 
+      const imagePath = await imageCache.downloadImage(airtableImage.url, airtableImage.filename);
+      
+      const { imageUrn } = await uploadImage(accessToken, connection, imagePath);
 
-
+      console.log("imageUrn:", imageUrn)
 
       const payload = {
         author: `urn:li:organization:${connection['page_id']}`,
