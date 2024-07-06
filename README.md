@@ -61,20 +61,28 @@ Sign into your social media accounts using these urls:
 
 Once you've signed in to your accounts, the OAuth tokens will be stored locally in a sqlite database.  A record will be created in Airtable to represent that page/account, but the tokens themselves will not be stored in Airtable. 
 
-# Todo
-- [ ] Encrypt tokens sotred in sqlite
-- [ ] Create guides for setting up:
-    - [ ] General usage guide about .env stuff
+# RoadMap / Todo 
+
+## Make It Work 
+- [ ] Instagram Posting
+- [X] Create guides for setting up:
+    - [X] General usage guide about .env stuff
     - [ ] Meta App
     - [ ] LinkedIn App
-- [ ] Dockerize
-- [ ] Move to typescript because this is a freakin' mess
-- [X] Meta Login
-- [X] Meta Posting
-- [X] Linkedin Login
-- [X] Linkedin Posting
-- [ ] Instagram Posting
 - [ ] Video Support
    - [ ] LinkedIn
    - [ ] Facebook
    - [ ] Instagram
+- [ ] Dockerize?  
+
+## Make It Better 
+- [ ] Encrypt tokens sotred in sqlite
+- [ ] Move to typescript because this is a freakin' mess
+
+## Done
+- [X] Meta Login
+- [X] Facebook Posting
+- [X] Linkedin Login
+- [X] Linkedin Posting
+
+
