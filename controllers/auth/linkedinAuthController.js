@@ -9,7 +9,7 @@ exports.authLinkedIn = (req, res) => {
   const queryParams = querystring.stringify({
     response_type: 'code',
     client_id: process.env.LINKEDIN_CLIENT_ID,
-    redirect_uri: `${process.env.REDIRECT_URI}/linkedin`,
+    redirect_uri: `${process.env.APP_URL}/auth/callback/linkedin`,
     scope: 'r_organization_social w_organization_social w_member_social r_basicprofile rw_organization_admin',
   });
   
@@ -22,7 +22,7 @@ exports.linkedinCallback = async (req, res) => {
   const params = {
     grant_type: 'authorization_code',
     code: code,
-    redirect_uri: `${process.env.REDIRECT_URI}/linkedin`,
+    redirect_uri: `${process.env.APP_URL}/auth/callback/linkedin`,
     client_id: process.env.LINKEDIN_CLIENT_ID,
     client_secret: process.env.LINKEDIN_CLIENT_SECRET,
   };

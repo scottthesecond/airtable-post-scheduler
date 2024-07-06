@@ -8,7 +8,7 @@ exports.authMeta = (req, res) => {
   const authUrl = 'https://www.facebook.com/v20.0/dialog/oauth';
   const queryParams = querystring.stringify({
     client_id: process.env.META_APP_ID,
-    redirect_uri: `${process.env.REDIRECT_URI}/meta`,
+    redirect_uri: `${process.env.APP_URL}/auth/callback/meta`,
     scope: 'pages_manage_posts,pages_read_engagement,pages_show_list',
     response_type: 'code',
   });
@@ -22,7 +22,7 @@ exports.metaCallback = async (req, res) => {
   const params = {
     client_id: process.env.META_APP_ID,
     client_secret: process.env.META_APP_SECRET,
-    redirect_uri: `${process.env.REDIRECT_URI}/meta`,
+    redirect_uri: `${process.env.APP_URL}/auth/callback/meta`,
     code,
   };
 
