@@ -1,8 +1,7 @@
-version: '3.8'
-
 services:
   app:
     build: .
+    image: socialtable 
     ports:
       - "${PORT:-3000}:${PORT:-3000}"
     environment:
@@ -18,3 +17,6 @@ services:
       - LINKEDIN_CLIENT_SECRET=${LINKEDIN_CLIENT_SECRET}
     volumes:
       - persist:/app/persist
+
+volumes:
+  persist:

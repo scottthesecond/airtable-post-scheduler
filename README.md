@@ -14,12 +14,15 @@ Skip HootSutie or Buffer.  You're already paying for Airtable – use it as your
 
 ## Build & Install
 ### Docker
-You can build social table in docker, then use a docker compose file to set it up and keep it running.
+
+Docker is an easy way to build and run SocialTable.  
 
 ```bash
-docker build -f dockerfile . # Build an image 
-docker image ls # list images (to get this image's ID)
-docker save -o builds/socialtable.tar {Image ID from previous step}
+
+## Build the image to run on anthoer machine
+docker-compose build # Build the image 
+docker save -o builds/socialtable.tar socialtable
+
 ```
 
 Save the image: 
