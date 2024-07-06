@@ -2,6 +2,7 @@
 auth.db
 cache/
 builds/
+persist/
 
 # Logs
 logs

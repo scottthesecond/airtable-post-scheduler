@@ -1,6 +1,15 @@
+const fs = require('fs');
+const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
 
-const db = new sqlite3.Database('./auth.db', (err) => {
+const persistDir = path.join(__dirname, '../persist');
+if (!fs.existsSync(persistDir)) {
+  fs.mkdirSync(persistDir, { recursive: true });
+}
+
+const dbPath = path.join(persistDir, 'auth.db');
+
+const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
     console.error('Error opening database:', err.message);
   } else {

@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "${PORT:-3000}:${PORT:-3000}"
+    environment:
+      - PORT=${PORT}
+      - META_APP_ID=${META_APP_ID}
+      - META_APP_SECRET=${META_APP_SECRET}
+      - REDIRECT_URI=${REDIRECT_URI}
+      - AIRTABLE_API_KEY=${AIRTABLE_API_KEY}
+      - AIRTABLE_BASE_ID=${AIRTABLE_BASE_ID}
+      - AIRTABLE_CONNECTIONS_TABLE=${AIRTABLE_CONNECTIONS_TABLE}
+      - AIRTABLE_POSTS_TABLE=${AIRTABLE_POSTS_TABLE}
+      - LINKEDIN_CLIENT_ID=${LINKEDIN_CLIENT_ID}
+      - LINKEDIN_CLIENT_SECRET=${LINKEDIN_CLIENT_SECRET}
+    volumes:
+      - persist:/app/persist
