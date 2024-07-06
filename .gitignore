@@ -1,6 +1,7 @@
 .env
 auth.db
 cache/
+builds/
 
 # Logs
 logs

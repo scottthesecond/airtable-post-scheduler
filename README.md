@@ -11,6 +11,20 @@ Skip HootSutie or Buffer.  You're already paying for Airtable – use it as your
 3. Social Table handles the rest.
 
 # Usage
+
+## Build & Install
+### Docker
+You can build social table in docker, then use a docker compose file to set it up and keep it running.
+
+```bash
+docker build -f dockerfile . # Build an image 
+docker image ls # list images (to get this image's ID)
+docker save -o builds/socialtable {Image ID from previous step}
+```
+
+Save the image: 
+
+
 ## Configuration
 ### Environment Variables
 Configuration should be stored in a `.env` file.
