@@ -1,5 +1,4 @@
-const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('auth.db');
+const db = require('../config/database');
 
 exports.findConnection = (login_id, page_id, platform, callback) => {
   db.get(
