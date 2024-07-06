@@ -23,7 +23,7 @@ exports.addOrUpdateConnectionToAirtable = async (connection) => {
             "Page Name": connection.page_name,
             "Platform": connection.platform,
             "Connection ID": connection.id,
-            "Authenticated": true
+//            "Authenticated": true
           }
         }
       ]);
