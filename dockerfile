@@ -1,0 +1,49 @@
+# Use an official Node.js runtime as the base image
+FROM node:20-alpine
+
+# Set the working directory
+WORKDIR /app
+
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application
+COPY . .
+
+# Define build arguments with default values
+ARG PORT=3000
+ARG REDIRECT_URI
+
+ARG AIRTABLE_API_KEY
+ARG AIRTABLE_BASE_ID
+ARG AIRTABLE_CONNECTIONS_TABLE
+ARG AIRTABLE_POSTS_TABLE
+
+ARG LINKEDIN_CLIENT_ID
+ARG LINKEDIN_CLIENT_SECRET
+
+ARG META_APP_ID
+ARG META_APP_SECRET
+
+# Set environment variables
+ENV PORT=$PORT
+ENV META_APP_ID=$META_APP_ID
+ENV META_APP_SECRET=$META_APP_SECRET
+ENV REDIRECT_URI=$REDIRECT_URI
+
+ENV AIRTABLE_API_KEY=$AIRTABLE_API_KEY
+ENV AIRTABLE_BASE_ID=$AIRTABLE_BASE_ID
+ENV AIRTABLE_CONNECTIONS_TABLE=$AIRTABLE_CONNECTIONS_TABLE
+ENV AIRTABLE_POSTS_TABLE=$AIRTABLE_POSTS_TABLE
+
+ENV LINKEDIN_CLIENT_ID=$LINKEDIN_CLIENT_ID
+ENV LINKEDIN_CLIENT_SECRET=$LINKEDIN_CLIENT_SECRET
+
+# Expose the port the app runs on
+EXPOSE $PORT
+
+# Start the application
+CMD ["node", "index.js"]
