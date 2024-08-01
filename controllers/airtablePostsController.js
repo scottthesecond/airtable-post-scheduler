@@ -7,7 +7,7 @@ exports.fetchScheduledPosts = async () => {
     const now = new Date();
     const fifteenMinutesAgo = new Date(now.getTime() - 15 * 60 * 1000);
     const posts = await base(process.env.AIRTABLE_POSTS_TABLE).select({
-      filterByFormula: `AND(IS_AFTER({Post At}, DATETIME_PARSE('${fifteenMinutesAgo.toISOString()}')), IS_BEFORE({Post At}, DATETIME_PARSE('${now.toISOString()}')), {Error} = '', {Post Link} = '')`,
+      filterByFormula: `AND(IS_AFTER({Post At}, DATETIME_PARSE('${fifteenMinutesAgo.toISOString()}')), IS_BEFORE({Post At}, DATETIME_PARSE('${now.toISOString()}')), {Error} = '', {Post Link} = '', {Post Automatically (ScottBott)}=TRUE())`,
     }).firstPage();
 
     console.log(`Fetched ${posts.length} scheduled posts from Airtable`);

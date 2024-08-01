@@ -1,5 +1,6 @@
 .env
 auth.db
+.DS_Store
 cache/
 builds/
 persist/
