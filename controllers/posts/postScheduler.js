@@ -32,21 +32,19 @@ const postToPlatform = async (connection, post, postId) => {
   }
 };
 
-const processScheduledPosts = async () => {
-  const posts = await airtablePostsController.fetchScheduledPosts();
-  console.log(`Fetched ${posts.length} posts`);
+const processPost = async (postRecord) => {
+  const post = postRecord.fields;
+  const connectionId = parseInt(post['Connection ID'], 10);
+  console.log(`Processing post for Connection ID: ${connectionId}`);
 
-  posts.forEach(async (postRecord) => {
-    const post = postRecord.fields;
-    const connectionId = parseInt(post['Connection ID'], 10);
-    console.log(`Processing post for Connection ID: ${connectionId}`);
-
+  await new Promise((resolve) => {
     db.get(
       `SELECT * FROM connections WHERE id = ?`,
       [connectionId],
       async (err, connection) => {
         if (err) {
           console.error('Error fetching connection from database:', err.message);
+          resolve();
           return;
         }
 
@@ -56,18 +54,36 @@ const processScheduledPosts = async () => {
         } else {
           console.error(`No connection found for Connection ID: ${connectionId}`);
         }
+        resolve();
       }
     );
   });
 };
 
+const processScheduledPosts = async (isAsync = false) => {
+  const posts = await airtablePostsController.fetchScheduledPosts();
+  console.log(`Fetched ${posts.length} posts`);
+
+  if (isAsync) {
+    // Process posts asynchronously
+    posts.forEach(async (postRecord) => {
+      await processPost(postRecord);
+    });
+  } else {
+    // Process posts synchronously
+    for (const postRecord of posts) {
+      await processPost(postRecord);
+    }
+  }
+};
+
 // Schedule the job to run every minute
 schedule.scheduleJob('* * * * *', () => {
-  processScheduledPosts();
+  processScheduledPosts(/* true or false based on your preference */);
 });
 
 // Run the job immediately on application start
-processScheduledPosts();
+processScheduledPosts(/* true or false based on your preference */);
 
 module.exports = {
   processScheduledPosts,

@@ -7,11 +7,11 @@ exports.post = async (post, accessToken) => {
   let postUrl = '';
 
   try {
-    if (postType === 'Text') {
+    if (postType === 'Text' && post.Image == null) {
       throw new Error('Instagram does not support text-only posts');
-    } else if (postType === 'Link') {
+    } else if (postType === 'Link' && post.Image == null) {
       throw new Error('Instagram does not support link-only posts');
-    } else if (postType === 'Image') {
+    } else if (postType === 'Image' || post.Image != null) {
       const imageArray = post.Image;
       const imageUrl = Array.isArray(imageArray) ? imageArray[0].url : imageArray.url; // Ensure imageUrl is a string
       const mediaResponse = await axios.post(`https://graph.facebook.com/v20.0/me/media`, {
