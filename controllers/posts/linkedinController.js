@@ -63,7 +63,7 @@ exports.post = async (post, accessToken, connection) => {
 
     if (postType === 'Link') {
 
-      console.log("Posting an article", post);
+      console.log("Posting an article...");
 
       const linkArray = post.URL;
       const link = Array.isArray(linkArray) ? linkArray[0] : linkArray; // Ensure link is a string
